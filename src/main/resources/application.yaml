@@ -1,0 +1,28 @@
+server:
+  port: 1452
+
+spring:
+  application:
+    name: API-GATEWAY
+  config:
+    import: configserver:http://localhost:9296
+  cloud:
+    gateway:
+      routes:
+        - id: ORDER-SERVICE
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/order/**
+        - id: AUTH-SERVICE
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth/**
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: ${EUREKA_SERVER_ADDRESS:http://localhost:8761/eureka}
+  instance:
+    hostname: localhost
